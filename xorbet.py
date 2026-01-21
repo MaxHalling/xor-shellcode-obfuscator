@@ -186,8 +186,9 @@ def read_binary_file(path, verbose: bool) -> bytes:
     if verbose: print(f"[i] Attempting to retrieve input-data from '{path}'")
     try:
         with open(path, "rb") as file:
-            data = file.read()
-        return bytes(data)
+            data = file.read().decode().strip()
+            data = data.replace("\\x", "").replace(",","").replace("\\n", "").replace("","")
+        return bytes.fromhex(data)
     except FileNotFoundError as err:
         raise FileNotFoundError
 
@@ -254,7 +255,7 @@ def main():
             print("\n", save_params.data, "\n")
             print(f"[+] Successfully saved as {args.format if args.format == "raw" else args.format.capitalize()} format to {save_params.path}")
     except FileNotFoundError as err:
-        print(f"[!] {args.input} could not be found, exiting.")
+        print(f"[!] '{args.input}' could not be found, exiting.")
         sys.exit(1)
     except FileExistsError as err:
         print(f"[!] '{save_params.path}' already exists, exiting.")
@@ -265,4 +266,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-    #TODO Readme

@@ -1,0 +1,126 @@
+# xorbet 🍧, an XOR Shellcode Obfuscator
+
+A small command-line tool written in Python to XOR-obfuscate binary shellcode payloads.  
+The tool is intended for learning and research purposes, for example to understand how basic obfuscation techniques work and how shellcode can be transformed to evade simple signature-based detection.
+
+It supports multiple output formats, making it easy to integrate the obfuscated shellcode into different loaders or proof-of-concept programs.
+
+---
+
+## Features
+
+- XOR obfuscation with:
+  - Single-byte keys (hexadecimal, e.g. `0x42`)
+  - Multi-byte string keys (e.g. `SECRETKEY`)
+- Automatic key type detection
+- Multiple output formats:
+  - Raw binary (`.bin`)
+  - Python (`.py`)
+  - C (`.c`)
+- Optional verbose output for debugging and transparency
+- Can either save to file or print directly to the terminal
+
+---
+
+## Requirements
+
+- Python 3.10 or newer (uses `match/case`)
+- No external dependencies (standard library only)
+
+---
+
+## Usage
+
+```bash
+python xorbet.py -i <input_file_name> -k <key> -f <format> [-o <output_file_name>] [-v]
+```
+
+## Arguments
+
+| ### Argument      | ### Description                                               |
+|-------------------|---------------------------------------------------------------|
+| `-i`, `--input`   | Path to the input file containing raw binary shellcode        |
+| `-o`, `--output`  | Output filename **without extension**                         |
+| `-k`, `--key`     | XOR key (hex single-byte like `0x42` or string like `SECRET`) |
+| `-f`, `--format`  | Output format: `raw`, `python`, or `c`                        |
+| `-v`, `--verbose` | Enable verbose output                                         |
+
+If `-o`, `--output` is omitted, the result is printed to the terminal **only**
+
+---
+
+## Examples
+
+### Obfuscate shellcode and save as raw binary
+```bash
+python xorbet.py -i shellcode.bin -o obfuscated -k 0x42 -f raw
+```
+
+Output file:
+```bash
+obfuscated.bin
+```
+
+### Obfuscate shellcode using a string key and output as Python
+```bash
+python xorbet.py -i shellcode.bin -o obfuscated -k SECRET -f python
+```
+
+Generated file (payload.py):
+```python
+shellcode = b"\xfc\x48\x81\xe4"
+```
+
+### Output C-formatted shellcode to terminal only
+```bash
+python xorbet.py -i shellcode.bin -k 0x42 -f c
+```
+
+```c
+unsigned char buf[] = {
+    0xfc, 0x48, 0x81, 0xe4
+};
+unsigned int buf_len = 4;
+```
+
+---
+
+
+## Output formats
+
+### Raw (`raw`)
+- Outputs raw XOR-obfuscated bytes
+- Saved as `.bin`
+- Suitable for direct loading by other tools
+
+### Python (`python`)
+- Outputs as shellcode as a Python byte string
+- Saved as `.py`
+- Easy to import into Python loaders
+
+### C (`c`)
+- Outputs shellcode as a C Byte array
+- Saved as `.c`
+- Includes buffer length variable
+
+---
+
+## Notes
+
+- XOR is symmetric, running obfuscated shellcode through the tool again with the same key will result in deobfuscated shellcode.
+- Keys shorter or longer than the input are automatically repeated as needed.
+- The tool will exit if the specified output file already exists.
+- The tool will exit if the specified input cannot be found.
+
+---
+
+## Disclaimer
+
+This project is intented for **educational and research purposes only**.
+Do not use for any malicious activity or against systems you do not own or have explicit permission to test.
+
+---
+
+## License
+
+MIT License
