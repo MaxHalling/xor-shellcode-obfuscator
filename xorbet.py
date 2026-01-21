@@ -165,9 +165,9 @@ def save_to_file(path, data, write_mode, verbose: bool):
 
 #Attempts to read binary input data from specified file
 #Catches FileNotFoundError if the specified file does not exist and exits the program
-def read_binary_file(path, verbose: bool) -> bytes:
+def read_shellcode_file(path, verbose: bool) -> bytes:
     """
-    Reads binary data from binary file input by user.
+    Reads hex-escaped shellcode data from .bin or .txt file input by user.
 
     Args:
         path: File input name string from user input.
@@ -242,7 +242,7 @@ def main():
 
     try:
         #Executes XOR-operation with key specified by user as argument, binary read from file, also specified by the user as an argument
-        encrypted = xor_operation(read_binary_file(args.input, args.verbose), parse_key(args.key, args.verbose))
+        encrypted = xor_operation(read_shellcode_file(args.input, args.verbose), parse_key(args.key, args.verbose))
 
         #If no output option is specified by the user, the result is ONLY printed to the terminal, otherwise it is also saved to the file specified by the user
         save_params = format_output(args.output, encrypted, args.format, args.verbose)
