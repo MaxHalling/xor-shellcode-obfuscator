@@ -1,4 +1,4 @@
-# xorbet 🍧,
+# xorbet 🍧
 # XOR Shellcode Obfuscator
 
 A small command-line tool written in Python to XOR-obfuscate binary shellcode payloads.  
@@ -38,7 +38,7 @@ python xorbet.py -i <input_file_name> -k <key> -f <format> [-o <output_file_name
 
 ## Arguments
 
-| ### Argument      | ### Description                                               |
+| Argument          | Description                                                   |
 |-------------------|---------------------------------------------------------------|
 | `-i`, `--input`   | Path to the input file containing raw binary shellcode        |
 | `-o`, `--output`  | Output filename **without extension**                         |
