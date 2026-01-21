@@ -1,4 +1,5 @@
-# xorbet 🍧, an XOR Shellcode Obfuscator
+# xorbet 🍧,
+# XOR Shellcode Obfuscator
 
 A small command-line tool written in Python to XOR-obfuscate binary shellcode payloads.  
 The tool is intended for learning and research purposes, for example to understand how basic obfuscation techniques work and how shellcode can be transformed to evade simple signature-based detection.
