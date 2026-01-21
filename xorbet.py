@@ -187,7 +187,7 @@ def read_binary_file(path, verbose: bool) -> bytes:
     try:
         with open(path, "rb") as file:
             data = file.read().decode().strip()
-            data = data.replace("\\x", "").replace(",","").replace("\\n", "").replace("","")
+            data = data.replace("\\x", "").replace(",","").replace("\\n", "").replace("\"","")
         return bytes.fromhex(data)
     except FileNotFoundError as err:
         raise FileNotFoundError
