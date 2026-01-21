@@ -117,7 +117,7 @@ def format_output(name: str, data, format: str, verbose: bool) -> FormattedData:
             )
         case "c":
             path = None if name == None else f"{name}.c"
-            #C output starts as an arry of strings to later be pieced together in the end
+            #C output starts as an array of strings to later be pieced together in the end
             lines = ["unsigned char buf[] = {"]
             bytes_per_row = 8
             #Splits the data into chunks of a given number of bytes per row/chunk
@@ -186,9 +186,8 @@ def read_binary_file(path, verbose: bool) -> bytes:
     if verbose: print(f"[i] Attempting to retrieve input-data from '{path}'")
     try:
         with open(path, "rb") as file:
-            data = file.read().decode().strip()
-            data = data.replace("\\x", "").replace(",","").replace("\\n", "").replace("\"","")
-        return bytes.fromhex(data)
+            data = file.read()
+        return bytes.fromhex(data.decode().replace("\\x", "").replace("\"", "").replace(",", "").replace("\\n", ""))
     except FileNotFoundError as err:
         raise FileNotFoundError
 
