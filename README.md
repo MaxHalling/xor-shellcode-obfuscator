@@ -40,7 +40,7 @@ python xorbet.py -i <input_file_name> -k <key> -f <format> [-o <output_file_name
 
 | Argument          | Description                                                   |
 |-------------------|---------------------------------------------------------------|
-| `-i`, `--input`   | Path to the input file containing hex-escaped shellcode       |
+| `-i`, `--input`   | Path to input file (raw binary, or hex-escaped shellcode)             |
 | `-o`, `--output`  | Output filename **without extension**                         |
 | `-k`, `--key`     | XOR key (hex single-byte like `0x42` or string like `SECRET`) |
 | `-f`, `--format`  | Output format: `raw`, `python`, or `c`                        |

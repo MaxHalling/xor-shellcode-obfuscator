@@ -163,22 +163,28 @@ def save_to_file(path, data, write_mode, verbose: bool):
     except FileExistsError as err:
         raise FileExistsError
 
-#Attempts to read binary input data from specified file
-#Catches FileNotFoundError if the specified file does not exist and exits the program
+#Attempts to read shellcode input from a file. Accepts either hex-escaped
+#text (e.g. "\xfc\x48", or msfvenom-style quoted c-array strings) or a raw
+#binary payload, which is used verbatim when it isn't valid UTF-8 text.
 def read_shellcode_file(path, verbose: bool) -> bytes:
     """
-    Reads hex-escaped shellcode data from .bin or .txt file input by user.
+    Reads shellcode input from the specified file.
+
+    Two input forms are supported and auto-detected:
+    - Hex-escaped text (e.g. "\\xfc\\x48") or an msfvenom-style c-array string
+      wrapped in quotes and commas.
+    - Raw binary payload, used verbatim when it isn't valid UTF-8 text.
 
     Args:
         path: File input name string from user input.
         verbose: Will print additional information to terminal if true.
-    
+
     Returns:
         Bytes of the input data.
 
     Raises:
         FileNotFoundError: If the provided filepath does not exist.
-    
+
     Examples:
     >>> read_shellcode_file("input.bin")
     b'TEST'
@@ -187,9 +193,19 @@ def read_shellcode_file(path, verbose: bool) -> bytes:
     try:
         with open(path, "rb") as file:
             data = file.read()
-        return bytes.fromhex(data.decode().replace("\\x", "").replace("\"", "").replace(",", "").replace("\\n", ""))
     except FileNotFoundError as err:
         raise FileNotFoundError
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        # Not valid UTF-8 => a raw binary payload; use the bytes verbatim.
+        if verbose: print(f"[i] Input is raw binary; using bytes as-is.")
+        return data
+
+    # Decodes cleanly as text: strip escape/quote/comma noise and parse hex.
+    cleaned = text.replace("\\x", "").replace("\"", "").replace(",", "").replace("\\n", "")
+    return bytes.fromhex(cleaned)
+    
 
 #Executes XOR-operation on provided data with specified key
 #Usage of the modulo operator ensures proper XOR-operation regardless of single byte key or string key
@@ -218,7 +234,7 @@ def main():
     #Instantiates argparse and defines the necessary arguments to be used
     parser = argparse.ArgumentParser("Basic shellcode XOR-obfuscator")
     parser.add_argument("-i", "--input", 
-        help="Path to file with binary shellcode.",
+        help="Path to input shellcode file: raw binary, or hex-escaped text (e.g. \\xfc\\x48).",
         required=True
     )
     parser.add_argument("-o", "--output", 
